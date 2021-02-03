@@ -1,0 +1,23 @@
+{
+  "name": "stock-crawler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/facundocoto/stock-crawler.git"
+  },
+  "author": "Facundo Coto @facundocoto",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/facundocoto/stock-crawler/issues"
+  },
+  "homepage": "https://github.com/facundocoto/stock-crawler#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "node-html-parser": "^2.1.0"
+  }
+}
