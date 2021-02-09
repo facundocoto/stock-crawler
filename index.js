@@ -1,5 +1,7 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+const cron = require("node-cron");
+const notifier = require("node-notifier");
 
 const { URLS } = require("./constants");
 
@@ -47,16 +49,27 @@ async function garbarino() {
 }
 
 async function main() {
-  console.log("Buscando stock...");
-  const atajoStockSeriesS = await atajo_series_s();
-  const atajoStockSeriesX = await atajo_series_x();
-  const fravegaStock = await fravega();
-  const garbarinoStock = await garbarino();
+  console.log("Buscando stock cada 5 minutos...");
+  cron.schedule("*/5 * * * *  ", async () => {
+    const atajoStockSeriesS = await atajo_series_s();
+    const atajoStockSeriesX = await atajo_series_x();
+    const fravegaStock = await fravega();
+    const garbarinoStock = await garbarino();
 
-  console.log({
-    Fravega: { SeriesX: fravegaStock },
-    Atajo: { SeriesX: atajoStockSeriesX, SeriesS: atajoStockSeriesS },
-    Garbarino: { SeriesS: garbarinoStock },
+    console.log({
+      Fravega: { SeriesX: fravegaStock },
+      Atajo: { SeriesX: atajoStockSeriesX, SeriesS: atajoStockSeriesS },
+      Garbarino: { SeriesS: garbarinoStock },
+    });
+
+    if (
+      fravegaStock ||
+      atajoStockSeriesS ||
+      atajoStockSeriesS ||
+      garbarinoStock
+    ) {
+      notifier.notify("Hay stock!");
+    }
   });
 }
 
