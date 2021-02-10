@@ -1,6 +1,8 @@
 const URLS = {
   FRAVEGA_XBOX_SERIES_X:
     "https://www.fravega.com/p/consola-microsoft-xbox-series-x-1-tb-342420",
+  FRAVEGA_XBOX_SERIES_S:
+    "https://www.fravega.com/p/consola-microsoft-xbox-series-s-512-gb-342405",
   ATAJO_XBOX_SERIES_S:
     "https://www.atajo.com.ar/consolas-xbox-series-s--det--RRS-00002",
   ATAJO_XBOX_SERIES_X_KIT:

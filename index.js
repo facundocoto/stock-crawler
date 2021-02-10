@@ -5,14 +5,24 @@ const notifier = require("node-notifier");
 
 const { URLS } = require("./constants");
 
-async function fravega() {
+async function fravega_series_x() {
   const { data: htmlAsString } = await axios.get(URLS.FRAVEGA_XBOX_SERIES_X);
-
   const parsedHtml = cheerio.load(htmlAsString);
   const fravegaStockLabel = parsedHtml(
     "#__next > div.withMainLayout__LayoutWrapper-sc-1lj5zpr-1.hhFziS > div > div > div.ProductDetails__NotAvailableWrapper-sc-2486oi-0.cxXFXL > section > p"
   );
   return fravegaStockLabel.text() !== "Producto temporalmente sin stock";
+}
+
+async function fravega_series_s() {
+  const { data: htmlAsString } = await axios.get(URLS.FRAVEGA_XBOX_SERIES_S);
+  
+
+  const parsedHtml = cheerio.load(htmlAsString);
+  const fravegaStockLabel = parsedHtml(
+    "#__next > div.withMainLayout__LayoutWrapper-sc-1lj5zpr-1.hhFziS > div > div > div.generalstyles__Row-sc-1j7wv79-0.generalstyles__RowNoSpaceTopBottom-sc-1j7wv79-1.ekzajL > div > div.PurchaseInfo__PurchaseInfoWrapper-sc-1wok6te-5.cRiVbx > div.PurchaseInfo__PriceWrapper-sc-1wok6te-4.hUnqwx"
+  );
+  return fravegaStockLabel.text() !== '';
 }
 
 async function atajo_series_s() {
@@ -51,25 +61,27 @@ async function garbarino() {
 async function main() {
   console.log("Buscando stock cada 5 minutos...");
   cron.schedule("*/5 * * * *  ", async () => {
-    const atajoStockSeriesS = await atajo_series_s();
-    const atajoStockSeriesX = await atajo_series_x();
-    const fravegaStock = await fravega();
-    const garbarinoStock = await garbarino();
+  const atajoStockSeriesS = await atajo_series_s();
+  const atajoStockSeriesX = await atajo_series_x();
+  const fravegaStockX = await fravega_series_x();
+  const fravegaStockS = await fravega_series_s();
+  const garbarinoStock = await garbarino();
 
-    console.log({
-      Fravega: { SeriesX: fravegaStock },
-      Atajo: { SeriesX: atajoStockSeriesX, SeriesS: atajoStockSeriesS },
-      Garbarino: { SeriesS: garbarinoStock },
-    });
+  console.log({
+    Fravega: { SeriesX: fravegaStockX, SeriesS: fravegaStockS },
+    Atajo: { SeriesX: atajoStockSeriesX, SeriesS: atajoStockSeriesS },
+    Garbarino: { SeriesS: garbarinoStock },
+  });
 
-    if (
-      fravegaStock ||
-      atajoStockSeriesS ||
-      atajoStockSeriesS ||
-      garbarinoStock
-    ) {
-      notifier.notify("Hay stock!");
-    }
+  if (
+    fravegaStockX ||
+    fravegaStockS ||
+    atajoStockSeriesS ||
+    atajoStockSeriesS ||
+    garbarinoStock
+  ) {
+    notifier.notify("Hay stock!");
+  }
   });
 }
 
